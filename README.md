@@ -2,13 +2,13 @@
 Timesheet
 
 Submit Employee
-![employee](./screenshot/submitEmployee.png)
+`./screenshot/submitEmployee.png`
 
 Submit Project
-![project](./screenshot/submitProject.png)
+`./screenshot/submitProject.png`
 
 Submit Timesheet
-![timesheet](./screenshot/submitTimesheet.png)
+`./screenshot/submitTimesheet.png`
 
 ## JSON format in submitTimesheet
 

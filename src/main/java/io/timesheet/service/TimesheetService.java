@@ -5,6 +5,7 @@ import io.timesheet.model.Project;
 import io.timesheet.model.Timesheet;
 import io.timesheet.repository.EmployeeRepository;
 import io.timesheet.repository.TimesheetRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.time.LocalTime;
 import java.util.Iterator;
 
 @Service
+@Slf4j
 public class TimesheetService {
 
     @Autowired
@@ -21,17 +23,6 @@ public class TimesheetService {
 
     @Autowired
     EmployeeRepository employeeRepository;
-
-    public void manuallyCreateTimesheet(JSONObject request) {
-        Timesheet timesheet = new Timesheet();
-        timesheet.setTimesheetId(Integer.valueOf("1"));
-        timesheet.setStartDate(LocalDate.now());
-        timesheet.setEndDate(LocalDate.now());
-        timesheet.setData("Timesheet Data");
-        timesheetRepository.save(timesheet);
-
-        employeeTimesheet(request, timesheet);
-    }
 
     public void employeeTimesheet(JSONObject request, Timesheet timesheet) {
         String employeeId = request.getString("employeeId");
@@ -48,6 +39,9 @@ public class TimesheetService {
 
     public static JSONObject getTimesheetData(String timesheetST) {
         JSONObject time = new JSONObject(timesheetST);
+
+        log.info("Timesheet String "+time.toString());
+
         int attendanceST = 0;
         int attendanceAPH = 0;
         int overheadST = 0;

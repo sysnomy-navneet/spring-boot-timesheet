@@ -6,8 +6,6 @@ import io.timesheet.model.Timesheet;
 import io.timesheet.repository.EmployeeRepository;
 import io.timesheet.repository.ProjectRepository;
 import io.timesheet.repository.TimesheetRepository;
-import io.timesheet.service.EmployeeService;
-import io.timesheet.service.HolidayService;
 import io.timesheet.service.ProjectService;
 import io.timesheet.service.TimesheetService;
 import org.json.JSONObject;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -25,16 +22,7 @@ import java.util.Map;
 public class CommonController {
 
     @Autowired
-    EmployeeService employeeService;
-
-    @Autowired
-    ProjectService projectService;
-
-    @Autowired
     TimesheetService timesheetService;
-
-    @Autowired
-    HolidayService holidayService;
 
     @Autowired
     EmployeeRepository employeeRepository;
@@ -45,15 +33,8 @@ public class CommonController {
     @Autowired
     TimesheetRepository timesheetRepository;
 
-    @PostMapping("/submitDefault")
-    public @ResponseBody String submitTimesheet(@RequestBody String strParam) {
-        JSONObject request = new JSONObject(strParam);
-        employeeService.manuallyCreateEmployee(request);
-        projectService.manuallyCreateProject(request);
-        timesheetService.manuallyCreateTimesheet(request);
-        holidayService.manuallySubmitHoliday(request);
-        return "success";
-    }
+    @Autowired
+    ProjectService projectService;
 
     @PostMapping("/submitEmployee")
     public @ResponseBody String submitEmployee(@RequestBody Employee employee) {
@@ -68,7 +49,7 @@ public class CommonController {
     }
 
     @PostMapping("/submitTimesheet")
-    public @ResponseBody Map<String, Object> submit(@RequestBody String strParam) {
+    public @ResponseBody Map<String, Object> submitTimesheet(@RequestBody String strParam) {
         JSONObject request = new JSONObject(strParam);
 
         String employeeId = request.getString("employeeId");
@@ -97,8 +78,7 @@ public class CommonController {
         Timesheet timesheets = timesheetRepository.findById(Integer.valueOf(timesheet.getTimesheetId())).get();
 
         //linked employee with project
-        employee.enrolledProject(projects);
-        employeeRepository.save(employee);
+        projectService.employeeProject(request);
 
         //output
         JSONObject returnMap = TimesheetService.getTimesheetData(timesheetStr);

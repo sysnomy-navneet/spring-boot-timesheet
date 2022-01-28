@@ -7,7 +7,6 @@ import io.timesheet.repository.ProjectRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.time.LocalDate;
 
 @Service
 public class ProjectService {
@@ -17,19 +16,7 @@ public class ProjectService {
     @Autowired
     EmployeeRepository employeeRepository;
 
-    public void manuallyCreateProject(JSONObject request) {
-        Project project = new Project();
-        project.setProjectId(Integer.valueOf(request.getString("projectType")));
-        project.setStartDate(LocalDate.now());
-        project.setEndDate(LocalDate.now());
-        project.setProjectName("Default timesheet");
-        project.setStatus("Active");
-        projectRepository.save(project);
-
-        employeeProject(request);
-    }
-
-    private void employeeProject(JSONObject request) {
+    public void employeeProject(JSONObject request) {
         String employeeId = request.getString("employeeId");
         String projectId = request.getString("projectType");
 
